@@ -69,7 +69,7 @@ class Field(Entity):
 
         for i in range(-1, 2):
             for j in range(-1, 2):
-                if self.check_coordinates(x + i, y + j) and self.cells[y + j][x + i].is_mine:
+                if self.check_cell(x + i, y + j) and self.cells[y + j][x + i].is_mine:
                     mines += 1
 
         return mines
@@ -89,7 +89,7 @@ class Field(Entity):
 
         return count
 
-    def check_coordinates(self, x, y):
+    def check_cell(self, x, y):
         if 0 <= x < self.width and 0 <= y < self.height:
             return True
 

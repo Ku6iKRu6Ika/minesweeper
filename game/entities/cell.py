@@ -34,26 +34,26 @@ class Cell(Entity):
         if count_mines == 0:
             for i in range(-1, 2):
                 for j in range(-1, 2):
-                    if self.field.check_coordinates(self.x + i, self.y + j):
+                    if self.field.check_cell(self.x + i, self.y + j):
                         cell = self.field.cells[self.y + j][self.x + i]
 
                         if not cell.opened:
                             cell.open()
 
     def draw(self, display):
-        image = assests.closed_img
-
-        if self.clicked:
-            image = assests.opened_img
-        elif self.flag:
-            image = assests.flag_img
-        elif self.opened:
+        if self.opened:
             count_mines = self.field.get_count_mines(self.x, self.y)
 
             if count_mines == 0:
                 image = assests.opened_img
             else:
                 image = assests.mines[count_mines]
+        elif self.flag:
+            image = assests.flag_img
+        elif self.clicked:
+            image = assests.opened_img
+        else:
+            image = assests.closed_img
 
         display.blit(image, self.rect)
 
