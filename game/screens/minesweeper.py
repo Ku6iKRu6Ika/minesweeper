@@ -34,39 +34,45 @@ class Minesweeper(Screen):
                 self.game.stop()
             elif event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]:
                 if self.rect_field.collidepoint(*event.pos):
-                    cell = self.field.get_cell_from_pos((event.pos[0], event.pos[1] - self.rect_field.y))
-
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if event.button == pygame.BUTTON_LEFT:
-                            if not self.running:
-                                self.field.generate_mines(self.mines, cell.x, cell.y)
-                                self.field.cells[cell.y][cell.x].open()
-
-                                self.running = True
-
-                            if not cell.opened and not cell.flag:
-                                cell.click()
-                        elif event.button == pygame.BUTTON_RIGHT and not cell.opened:
-                            cell.change_flag()
-                            assests.flag_audio.play()
-                    elif event.type == pygame.MOUSEBUTTONUP:
-                        if event.button == pygame.BUTTON_LEFT:
-                            if cell.clicked:
-                                if cell.is_mine:
-                                    cell.boom()
-                                    assests.lose_audio.play()
-
-                                    self.running = False
-                                else:
-                                    cell.open()
-
-                            self.field.remove_clicked()
+                    self.click_field(event)
                 elif self.rect_panel.collidepoint(*event.pos):
-                    pass
+                    self.click_panel(event)
 
-        self._draw()
+        self.draw()
 
-    def _draw(self):
+    def click_field(self, event):
+        cell = self.field.get_cell_from_pos((event.pos[0], event.pos[1] - self.rect_field.y))
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == pygame.BUTTON_LEFT:
+                if not self.running:
+                    self.field.generate_mines(self.mines, cell.x, cell.y)
+                    self.field.cells[cell.y][cell.x].open()
+
+                    self.running = True
+
+                if not cell.opened and not cell.flag:
+                    cell.click()
+            elif event.button == pygame.BUTTON_RIGHT and not cell.opened:
+                cell.change_flag()
+                assests.flag_audio.play()
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == pygame.BUTTON_LEFT:
+                if cell.clicked:
+                    if cell.is_mine:
+                        cell.boom()
+                        assests.lose_audio.play()
+
+                        self.running = False
+                    else:
+                        cell.open()
+
+                self.field.remove_clicked()
+
+    def click_panel(self, event):
+        pass
+
+    def draw(self):
         if self.running:
             flags_on_mine = self.field.get_count_flags(on_mine=True)
             flags = self.field.get_count_flags()
