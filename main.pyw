@@ -14,7 +14,13 @@ def main():
     game = Game(config.WIDTH, config.HEIGHT, config.CAPTION, config.FPS)
     game.set_icon(assests.icon)
 
-    minesweeper = Minesweeper(config.WIDTH_FIELD, config.HEIGHT_FIELD, config.SIZE_CELL, config.MINES)
+    minesweeper = Minesweeper(
+        config.WIDTH_FIELD,
+        config.HEIGHT_FIELD,
+        130,
+        config.SIZE_CELL,
+        config.MINES
+    )
     game.start(minesweeper)
 
 

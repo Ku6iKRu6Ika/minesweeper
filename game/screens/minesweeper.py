@@ -7,14 +7,13 @@ from game import assests
 
 
 class Minesweeper(Screen):
-    def __init__(self, width, height, size_cell, mines):
+    def __init__(self, width, height, panel_height, size_cell, mines):
         self.width = width
         self.height = height
         self.width_window = width * size_cell
         self.height_window = height * size_cell
 
         self.mines = mines
-        panel_height = 150
 
         self.rect_panel = pygame.Rect((0, 0, self.width_window, panel_height))
         self.surface_panel = pygame.Surface((self.width_window, panel_height))
@@ -38,7 +37,7 @@ class Minesweeper(Screen):
                     cell = self.field.get_cell_from_pos((event.pos[0], event.pos[1] - self.rect_field.y))
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        if event.button == 1:
+                        if event.button == pygame.BUTTON_LEFT:
                             if not self.running:
                                 self.field.generate_mines(self.mines, cell.x, cell.y)
                                 self.field.cells[cell.y][cell.x].open()
@@ -47,15 +46,16 @@ class Minesweeper(Screen):
 
                             if not cell.opened and not cell.flag:
                                 cell.click()
-                        elif event.button == 3 and not cell.opened:
+                        elif event.button == pygame.BUTTON_RIGHT and not cell.opened:
                             cell.change_flag()
                             assests.flag_audio.play()
                     elif event.type == pygame.MOUSEBUTTONUP:
-                        if event.button == 1:
+                        if event.button == pygame.BUTTON_LEFT:
                             if cell.clicked:
                                 if cell.is_mine:
                                     cell.boom()
                                     assests.lose_audio.play()
+
                                     self.running = False
                                 else:
                                     cell.open()

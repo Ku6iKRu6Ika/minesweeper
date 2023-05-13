@@ -6,6 +6,7 @@ from .cell import Cell
 
 class Field(Entity):
     cells = []
+    clicked_cell = None
 
     def __init__(self, width, height, size_cell):
         self.width = width
@@ -45,9 +46,10 @@ class Field(Entity):
             cells[y].remove((x, y))
 
     def remove_clicked(self):
-        for y in range(self.height):
-            for x in range(self.width):
-                self.cells[y][x].clicked = False
+        if self.clicked_cell is not None:
+            self.clicked_cell.clicked = False
+
+        self.clicked_cell = None
 
     def draw(self, display, game_over=False):
         for y in range(self.height):

@@ -20,6 +20,7 @@ class Cell(Entity):
 
     def click(self):
         self.clicked = True
+        self.field.clicked_cell = self
 
     def boom(self):
         self.exploded = True
