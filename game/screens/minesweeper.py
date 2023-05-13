@@ -7,20 +7,22 @@ from game import assests
 
 
 class Minesweeper(Screen):
-    def __init__(self, width, height, size_cell, count_mines):
+    def __init__(self, width, height, size_cell, mines):
         self.width = width
         self.height = height
+        self.width_window = width * size_cell
+        self.height_window = height * size_cell
 
-        panel_height = 100
+        self.mines = mines
+        panel_height = 150
 
-        self.rect_panel = pygame.Rect((0, 0, width * size_cell, panel_height))
-        self.rect_field = pygame.Rect((0, panel_height, width * size_cell, height * size_cell))
-
-        self.surface_panel = pygame.Surface((width * size_cell, panel_height))
-        self.surface_field = pygame.Surface((width * size_cell, height * size_cell))
-
+        self.rect_panel = pygame.Rect((0, 0, self.width_window, panel_height))
+        self.surface_panel = pygame.Surface((self.width_window, panel_height))
         self.panel = Panel(panel_height)
-        self.field = Field(width, height, size_cell, count_mines)
+
+        self.rect_field = pygame.Rect((0, panel_height, self.width_window, self.height_window))
+        self.surface_field = pygame.Surface((self.width_window, self.height_window))
+        self.field = Field(width, height, size_cell)
 
         self.running = False
 
@@ -38,7 +40,7 @@ class Minesweeper(Screen):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if event.button == 1:
                             if not self.running:
-                                self.field.generate_mines(cell.x, cell.y)
+                                self.field.generate_mines(self.mines, cell.x, cell.y)
                                 self.field.cells[cell.y][cell.x].open()
 
                                 self.running = True
@@ -69,7 +71,7 @@ class Minesweeper(Screen):
             flags_on_mine = self.field.get_count_flags(on_mine=True)
             flags = self.field.get_count_flags()
 
-            if flags_on_mine == self.field.count_mines and flags_on_mine == flags:
+            if flags_on_mine == self.mines and flags_on_mine == flags:
                 self.running = False
                 self.field.reset()
 

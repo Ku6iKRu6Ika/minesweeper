@@ -7,11 +7,10 @@ from .cell import Cell
 class Field(Entity):
     cells = []
 
-    def __init__(self, width, height, size_cell, count_mines):
+    def __init__(self, width, height, size_cell):
         self.width = width
         self.height = height
         self.size_cell = size_cell
-        self.count_mines = count_mines
 
         self.reset()
 
@@ -26,7 +25,7 @@ class Field(Entity):
 
             self.cells.append(row)
 
-    def generate_mines(self, start_x, start_y):
+    def generate_mines(self, mines, start_x, start_y):
         self.reset()
 
         cells = []
@@ -40,7 +39,7 @@ class Field(Entity):
 
             cells.append(row)
 
-        for i in range(self.count_mines):
+        for i in range(mines):
             x, y = random.choice(random.choice(cells))
             self.cells[y][x].is_mine = True
             cells[y].remove((x, y))
