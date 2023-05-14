@@ -1,10 +1,8 @@
 import pygame
 from game import assests
 
-from .abc import Entity
 
-
-class Cell(Entity):
+class Cell:
     def __init__(self, x, y, size, field, is_mine=False):
         self.is_mine = is_mine
         self.opened = False

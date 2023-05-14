@@ -1,26 +1,28 @@
 import pygame
 
 from game.engine import Screen
-from game.entities import Field, Panel
+from game.entities import Field
+from game.entities import Panel
+from game.entities import Wrapper
 
 from game import assests
 
 
 class Minesweeper(Screen):
-    def __init__(self, width, height, panel_height, size_cell, mines):
+    def __init__(self, width, height, size_cell, mines, height_panel, margin, margin_width):
         self.width = width
         self.height = height
-        self.width_window = width * size_cell
-        self.height_window = height * size_cell
-
         self.mines = mines
 
-        self.rect_panel = pygame.Rect((0, 0, self.width_window, panel_height))
-        self.surface_panel = pygame.Surface((self.width_window, panel_height))
-        self.panel = Panel(panel_height)
+        self.wrapper = Wrapper(
+            width * size_cell,
+            height * size_cell,
+            height_panel,
+            margin,
+            margin_width
+        )
 
-        self.rect_field = pygame.Rect((0, panel_height, self.width_window, self.height_window))
-        self.surface_field = pygame.Surface((self.width_window, self.height_window))
+        self.panel = Panel(width * size_cell, height_panel)
         self.field = Field(width, height, size_cell)
 
         self.running = False
@@ -33,15 +35,15 @@ class Minesweeper(Screen):
             if event.type == pygame.QUIT:
                 self.game.stop()
             elif event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP]:
-                if self.rect_field.collidepoint(*event.pos):
+                if self.wrapper.collide_field(event.pos):
                     self.click_field(event)
-                elif self.rect_panel.collidepoint(*event.pos):
+                elif self.wrapper.collide_panel(event.pos):
                     self.click_panel(event)
 
         self.draw()
 
     def click_field(self, event):
-        cell = self.field.get_cell_from_pos((event.pos[0], event.pos[1] - self.rect_field.y))
+        cell = self.field.get_cell_from_pos(self.wrapper.get_field_pos(event.pos))
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
@@ -73,20 +75,23 @@ class Minesweeper(Screen):
         pass
 
     def draw(self):
+        flags = self.field.get_count_flags()
+        self.panel.draw(self.wrapper.sf_panel, self.mines - flags)
+
         if self.running:
             flags_on_mine = self.field.get_count_flags(on_mine=True)
-            flags = self.field.get_count_flags()
 
             if flags_on_mine == self.mines and flags_on_mine == flags:
                 self.running = False
                 self.field.reset()
 
-            self.field.draw(self.surface_field)
+            self.field.draw(self.wrapper.sf_field)
         else:
-            self.field.draw(self.surface_field, True)
+            self.field.draw(self.wrapper.sf_field, True)
 
-        self.game.display.blit(self.surface_panel, self.rect_panel)
-        self.game.display.blit(self.surface_field, self.rect_field)
+        self.wrapper.draw(self.game.display)
+        self.game.display.blit(self.wrapper.sf_panel, self.wrapper.rect_panel)
+        self.game.display.blit(self.wrapper.sf_field, self.wrapper.rect_field)
 
     def destroy(self):
         pass

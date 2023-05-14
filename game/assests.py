@@ -25,6 +25,12 @@ def scale_cell(image, size):
     return pygame.transform.scale(image, (size, size))
 
 
+def scale_factor(image, factor):
+    size = image.get_size()
+
+    return pygame.transform.scale(image, (size[0] * factor, size[1] * factor))
+
+
 icon = get_img('icon.ico')
 
 closed_img = scale_cell(get_img('closed.png'), config.SIZE_CELL)
@@ -38,12 +44,26 @@ flag_audio = get_audio('flag.mp3')
 start_audio = get_audio('start.mp3')
 
 mines = {
-    1: scale_cell(get_img('1.png'), config.SIZE_CELL),
-    2: scale_cell(get_img('2.png'), config.SIZE_CELL),
-    3: scale_cell(get_img('3.png'), config.SIZE_CELL),
-    4: scale_cell(get_img('4.png'), config.SIZE_CELL),
-    5: scale_cell(get_img('5.png'), config.SIZE_CELL),
-    6: scale_cell(get_img('6.png'), config.SIZE_CELL),
-    7: scale_cell(get_img('7.png'), config.SIZE_CELL),
-    8: scale_cell(get_img('8.png'), config.SIZE_CELL)
+    1: scale_cell(get_img('t1.png'), config.SIZE_CELL),
+    2: scale_cell(get_img('t2.png'), config.SIZE_CELL),
+    3: scale_cell(get_img('t3.png'), config.SIZE_CELL),
+    4: scale_cell(get_img('t4.png'), config.SIZE_CELL),
+    5: scale_cell(get_img('t5.png'), config.SIZE_CELL),
+    6: scale_cell(get_img('t6.png'), config.SIZE_CELL),
+    7: scale_cell(get_img('t7.png'), config.SIZE_CELL),
+    8: scale_cell(get_img('t8.png'), config.SIZE_CELL)
+}
+
+digits = {
+    -1: scale_factor(get_img('d-1.png'), 2),
+    0: scale_factor(get_img('d0.png'), 2),
+    1: scale_factor(get_img('d1.png'), 2),
+    2: scale_factor(get_img('d2.png'), 2),
+    3: scale_factor(get_img('d3.png'), 2),
+    4: scale_factor(get_img('d4.png'), 2),
+    5: scale_factor(get_img('d5.png'), 2),
+    6: scale_factor(get_img('d6.png'), 2),
+    7: scale_factor(get_img('d7.png'), 2),
+    8: scale_factor(get_img('d8.png'), 2),
+    9: scale_factor(get_img('d9.png'), 2),
 }

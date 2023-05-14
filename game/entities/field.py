@@ -1,10 +1,9 @@
 import random
 
-from .abc import Entity
 from .cell import Cell
 
 
-class Field(Entity):
+class Field:
     cells = []
     clicked_cell = None
 

@@ -17,9 +17,11 @@ def main():
     minesweeper = Minesweeper(
         config.WIDTH_FIELD,
         config.HEIGHT_FIELD,
-        130,
         config.SIZE_CELL,
-        config.MINES
+        config.MINES,
+        config.HEIGHT_PANEL,
+        config.MARGIN,
+        config.MARGIN_WIDTH
     )
     game.start(minesweeper)
 
