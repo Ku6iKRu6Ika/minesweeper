@@ -1,10 +1,12 @@
 import pygame
+import time
 
 from game.engine import Screen
 from game.entities import Field
 from game.entities import Panel
 from game.entities import Wrapper
 
+from game.const import GameStates
 from game import assests
 
 
@@ -25,12 +27,24 @@ class Minesweeper(Screen):
         self.panel = Panel(width * size_cell, height_panel)
         self.field = Field(width, height, size_cell)
 
+        self.start_time = time.time()
+        self.current_time = time.time()
+
         self.running = False
+        self.reset_game = True
+        self.winner = False
 
     def start(self):
+        _time = time.time()
+        self.start_time = _time
+        self.current_time = _time
+
         assests.start_audio.play()
 
     def update(self):
+        if self.running:
+            self.current_time = time.time()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game.stop()
@@ -47,14 +61,18 @@ class Minesweeper(Screen):
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                if not self.running:
-                    self.field.generate_mines(self.mines, cell.x, cell.y)
-                    self.field.cells[cell.y][cell.x].open()
+                if self.reset_game:
+                    if not self.running:
+                        self.field.generate_mines(self.mines, cell.x, cell.y)
+                        self.field.cells[cell.y][cell.x].open()
 
-                    self.running = True
+                        self.running = True
+                        self.start_time = time.time()
 
-                if not cell.opened and not cell.flag:
-                    cell.click()
+                        self.panel.start_game()
+
+                    if self.running and not cell.opened and not cell.flag:
+                        cell.click()
             elif event.button == pygame.BUTTON_RIGHT and not cell.opened:
                 cell.change_flag()
                 assests.flag_audio.play()
@@ -66,28 +84,47 @@ class Minesweeper(Screen):
                         assests.lose_audio.play()
 
                         self.running = False
+                        self.reset_game = False
                     else:
                         cell.open()
 
                 self.field.remove_clicked()
 
     def click_panel(self, event):
-        pass
+        if self.panel.collide_emoji(self.wrapper.get_panel_pos(event.pos)):
+            self.panel.click_emoji()
+
+            self.field.reset()
+            self.running = False
+            self.reset_game = True
+            self.winner = False
 
     def draw(self):
         flags = self.field.get_count_flags()
-        self.panel.draw(self.wrapper.sf_panel, self.mines - flags)
 
         if self.running:
-            flags_on_mine = self.field.get_count_flags(on_mine=True)
+            flags_mine = self.field.get_count_flags(on_mine=True)
 
-            if flags_on_mine == self.mines and flags_on_mine == flags:
+            if flags_mine == self.mines and self.mines == flags and self.field.get_count_closed_cell() == 0:
                 self.running = False
-                self.field.reset()
+                self.reset_game = False
+                self.winner = True
 
-            self.field.draw(self.wrapper.sf_field)
+                state = GameStates.WINNER
+            else:
+                state = GameStates.GOING
+        elif self.winner:
+            state = GameStates.WINNER
         else:
-            self.field.draw(self.wrapper.sf_field, True)
+            state = GameStates.GAME_OVER if not self.reset_game else GameStates.GOING
+
+        self.field.draw(self.wrapper.sf_field, state)
+        self.panel.draw(
+            self.wrapper.sf_panel,
+            self.mines - flags,
+            int(self.current_time - self.start_time),
+            state
+        )
 
         self.wrapper.draw(self.game.display)
         self.game.display.blit(self.wrapper.sf_panel, self.wrapper.rect_panel)

@@ -25,6 +25,7 @@ class Cell:
 
     def change_flag(self):
         self.flag = not self.flag
+        # self.opened = not self.opened
 
     def open(self):
         count_mines = self.field.get_count_mines(self.x, self.y)
@@ -36,7 +37,7 @@ class Cell:
                     if self.field.check_cell(self.x + i, self.y + j):
                         cell = self.field.cells[self.y + j][self.x + i]
 
-                        if not cell.opened:
+                        if not cell.opened and not cell.flag:
                             cell.open()
 
     def draw(self, display):
@@ -46,7 +47,7 @@ class Cell:
             if count_mines == 0:
                 image = assests.opened_img
             else:
-                image = assests.mines[count_mines]
+                image = assests.mines[count_mines - 1]
         elif self.flag:
             image = assests.flag_img
         elif self.clicked:

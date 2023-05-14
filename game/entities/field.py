@@ -2,6 +2,8 @@ import random
 
 from .cell import Cell
 
+from game.const import GameStates
+
 
 class Field:
     cells = []
@@ -26,8 +28,6 @@ class Field:
             self.cells.append(row)
 
     def generate_mines(self, mines, start_x, start_y):
-        self.reset()
-
         cells = []
 
         for y in range(self.height):
@@ -50,12 +50,12 @@ class Field:
 
         self.clicked_cell = None
 
-    def draw(self, display, game_over=False):
+    def draw(self, display, state):
         for y in range(self.height):
             for x in range(self.width):
                 cell = self.cells[y][x]
 
-                if game_over and cell.is_mine:
+                if state == GameStates.GAME_OVER and cell.is_mine:
                     cell.draw_mine(display)
                 else:
                     cell.draw(display)
@@ -85,6 +85,18 @@ class Field:
                     if on_mine and not cell.is_mine:
                         continue
 
+                    count += 1
+
+        return count
+
+    def get_count_closed_cell(self):
+        count = 0
+
+        for y in range(self.height):
+            for x in range(self.width):
+                cell = self.cells[y][x]
+
+                if not cell.opened and not cell.flag:
                     count += 1
 
         return count
