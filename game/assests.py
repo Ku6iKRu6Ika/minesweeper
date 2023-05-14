@@ -42,6 +42,7 @@ red_mine_img = scale_cell(get_img('red_mine.png'), config.SIZE_CELL)
 lose_audio = get_audio('lose.mp3')
 flag_audio = get_audio('flag.mp3')
 start_audio = get_audio('start.mp3')
+win_audio = get_audio('win.mp3')
 
 mines = [
     scale_cell(get_img('t1.png'), config.SIZE_CELL),

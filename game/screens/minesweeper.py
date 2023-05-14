@@ -119,6 +119,7 @@ class Minesweeper(Screen):
 
             if flags_mine == self.mines and self.mines == flags and self.field.get_count_closed_cell() == 0:
                 self.game_win()
+                assests.win_audio.play()
                 state = GameStates.WINNER
             else:
                 state = GameStates.GOING
