@@ -1,4 +1,5 @@
 import random
+import time
 
 from .cell import Cell
 
@@ -28,6 +29,9 @@ class Field:
             self.cells.append(row)
 
     def generate_mines(self, mines, start_x, start_y):
+        seed = random.randint(1, 2**64)
+        random.seed(seed)
+
         cells = []
 
         for y in range(self.height):

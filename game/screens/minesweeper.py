@@ -103,9 +103,10 @@ class Minesweeper(Screen):
                 self.field.remove_clicked()
 
     def click_panel(self, event):
-        if self.panel.collide_emoji(self.wrapper.get_panel_pos(event.pos)):
-            self.panel.click_emoji()
-            self.game_restart()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.panel.collide_emoji(self.wrapper.get_panel_pos(event.pos)):
+                self.panel.click_emoji()
+                self.game_restart()
 
     def draw(self):
         flags = self.field.get_count_flags()
