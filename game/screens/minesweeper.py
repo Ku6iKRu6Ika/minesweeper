@@ -35,10 +35,6 @@ class Minesweeper(Screen):
         self.winner = False
 
     def start(self):
-        _time = time.time()
-        self.start_time = _time
-        self.current_time = _time
-
         assests.start_audio.play()
 
     def update(self):
