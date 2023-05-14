@@ -66,6 +66,9 @@ class Minesweeper(Screen):
         self.reset_game = True
         self.winner = False
 
+        self.start_time = time.time()
+        self.current_time = time.time()
+
     def game_win(self):
         self.running = False
         self.reset_game = False
