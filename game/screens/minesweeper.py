@@ -137,8 +137,6 @@ class Minesweeper(Screen):
         )
 
         self.wrapper.draw(self.game.display)
-        self.game.display.blit(self.wrapper.sf_panel, self.wrapper.rect_panel)
-        self.game.display.blit(self.wrapper.sf_field, self.wrapper.rect_field)
 
     def destroy(self):
         pass

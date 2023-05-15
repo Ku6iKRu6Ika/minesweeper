@@ -101,3 +101,6 @@ class Wrapper:
         display.fill(LIGHT_GREY)
         self.draw_border(display, self.rect_panel)
         self.draw_border(display, self.rect_field)
+
+        display.blit(self.sf_panel, self.rect_panel)
+        display.blit(self.sf_field, self.rect_field)
